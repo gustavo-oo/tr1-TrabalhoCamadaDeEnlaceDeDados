@@ -34,4 +34,4 @@ g++ Simulador.cpp CamadaFisica.cpp
 ## ✍️ Author <a name = "authors"></a>
 
 - [Gustavo Pereira Chaves](https://github.com/gustavo-oo)
-- [David Gonçalves Mendes]()
+- [David Gonçalves Mendes](https://github.com/DavidsonGM)
