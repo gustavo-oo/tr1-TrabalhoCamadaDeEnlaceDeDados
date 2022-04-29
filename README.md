@@ -1,4 +1,4 @@
-<h1 align="center">Trabalho TR1 - Camada Física</h1>
+<h1 align="center">Trabalho TR1 - Camada de Enlace de Dados</h1>
 
 ## 📝 Table of Contents
 
@@ -10,7 +10,7 @@
 
 ## 🧐 About <a name = "about"></a>
 
-Esse repositório corresponde ao Trabalho 2 da disciplina de Teleinformática e Redes 1. Neste trabalho foi desenvolvido um simulador de camada física que transmite uma mensagem codificada(codificação binária, manchester ou bipolar), recebe a mensagem e a decodifica, apresentando a mensagem recebida.
+Esse repositório corresponde ao Trabalho 3 da disciplina de Teleinformática e Redes 1. Neste trabalho foi desenvolvido um simulador da camada de enlace de dados que **completar**
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
