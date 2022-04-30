@@ -139,7 +139,7 @@ vector<int> CamadaFisicaTransmissoraCodificacaoManchester(vector<int> quadro){
     int bit_resultante;
 
     for(int i = 0; i < quadro.size() * 2; i++){
-        bit_resultante = quadro[i/2] xor clock[i];
+        bit_resultante = quadro[i/2] ^ clock[i];
 
         if(bit_resultante == BIT_0){
             quadro_codificado.push_back(VOLTAGEM_ZERO);
