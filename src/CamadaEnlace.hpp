@@ -15,6 +15,9 @@
 
 using namespace std;
 
+vector<int> NumberToByte(int number);
+int ByteToNumber(vector<int> byte);
+
 extern uint8_t TIPO_DE_ENQUADRAMENTO;
 
 void CamadaEnlaceDadosTransmissora(vector<int> quadro);

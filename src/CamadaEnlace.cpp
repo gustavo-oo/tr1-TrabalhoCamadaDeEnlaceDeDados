@@ -2,8 +2,33 @@
 #include "CamadaEnlace.hpp"
 
 #include <iostream>
+#include <bitset>
+#include <math.h>
 
-uint8_t TIPO_DE_ENQUADRAMENTO = 0; //mudar depois
+uint8_t TIPO_DE_ENQUADRAMENTO = CONTAGEM_DE_CARACTERES; //mudar depois
+
+vector<int> NumberToByte(int number){
+    bitset<8> byte;
+    vector<int> byteInVector = {};
+
+    byte = number;
+
+    for(int j = 7; j > -1; j--){
+        byteInVector.push_back(byte[j]);
+    }
+
+    return byteInVector;
+}
+
+int ByteToNumber(vector<int> byte){
+    int number = 0;
+
+    for(int i = 0; i < byte.size(); i++){
+        number += byte[i] * pow(2, 7 - (i%8));
+    }
+
+    return number;
+}
 
 void CamadaEnlaceDadosTransmissora(vector<int> quadro){
 
@@ -34,11 +59,33 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadro){
 }
 
 vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
-    return quadro;
+    int contagemCaracteres = quadro.size();
+
+    vector <int> quadroEnquadrado = NumberToByte(contagemCaracteres);
+
+    for(int i = 0; i < quadro.size(); i++){
+        quadroEnquadrado.push_back(quadro[i]);
+    }
+
+    return quadroEnquadrado;
+}
+
+vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
+    vector<int> quadroDesenquadrado = {};
+
+    vector<int> contagemCaracteresEmBits = vector<int> (quadro.begin(), quadro.begin() + 7);
+
+    int contagemCaracteres = ByteToNumber(contagemCaracteresEmBits);
+
+    for(int i = 8; i < contagemCaracteres + 8; i++){
+        quadroDesenquadrado.push_back(quadro[i]);
+    }
+
+    return quadroDesenquadrado;
 }
 
 vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int> quadro) {
-    vector <int> quadroEnquadrado;
+    vector <int> quadroEnquadrado = {};
     quadroEnquadrado.push_back(BYTE_DE_FLAG);
 
     for (int i = 0; i < quadro.size(); i++){
@@ -52,7 +99,7 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int
 }
 
 vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> quadro) {
-    vector <int> quadroDesenquadrado;
+    vector <int> quadroDesenquadrado = {};
 
     // Loop sem os elementos das pontas do quadro, por serem sempre o byte de flag
     for (int i = 1; i < quadro.size() - 1; i++){
@@ -63,10 +110,6 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
     }
 
     return quadroDesenquadrado;
-}
-
-vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
-    return quadro;
 }
 
 vector<int> CamadaEnlaceDadosReceptoraEnquadramento (vector<int> quadro){
