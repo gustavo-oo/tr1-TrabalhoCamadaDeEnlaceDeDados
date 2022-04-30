@@ -1,9 +1,11 @@
 #include <iostream>
 #include <bitset>
 #include <vector>
-#include "CamadaFisica.hpp"
 #include <stdint.h>
 #include <math.h>
+
+#include "CamadaFisica.hpp"
+#include "CamadaEnlace.hpp"
 
 using namespace std;
 
@@ -30,7 +32,8 @@ void CamadaDeAplicacaoTransmissora(string mensagem){
     cout << "Mensagem para bits: ";
     PrintVector(quadro);
 
-    CamadaFisicaTransmissora(quadro);
+    CamadaEnlaceDadosTransmissora(quadro);
+    //CamadaFisicaTransmissora(quadro);
 }
 
 void CamadaFisicaTransmissora(vector<int> quadro){

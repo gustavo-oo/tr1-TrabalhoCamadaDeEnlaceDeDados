@@ -1,9 +1,45 @@
+#include "CamadaFisica.hpp"
 #include "CamadaEnlace.hpp"
+
 #include <iostream>
-// #include <bitset>
-// #include <vector>
-// #include <stdint.h>
-// #include <math.h>
+
+uint8_t TIPO_DE_ENQUADRAMENTO = 0; //mudar depois
+
+void CamadaEnlaceDadosTransmissora(vector<int> quadro){
+
+    quadro = CamadaEnlaceDadosTransmissoraEnquadramento(quadro);
+
+    quadro = CamadaEnlaceDadosTransmissoraControleDeErro(quadro);
+
+    CamadaFisicaTransmissora(quadro);
+}
+
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadro){
+    vector<int> quadroEnquadrado;
+
+    switch(TIPO_DE_ENQUADRAMENTO){
+        case CONTAGEM_DE_CARACTERES:
+            quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(quadro);
+            break;
+
+        case INSERCAO_DE_BYTES:
+            quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(quadro);
+            break;
+
+        case CODIGO_DE_HAMMING:
+            break;
+    }
+
+    return quadroEnquadrado;
+}
+
+vector<int> CamadaEnlaceDadosTransmissoraControleDeErro(vector<int> quadro){
+    return quadro;
+}
+
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
+    return quadro;
+}
 
 vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int> quadro) {
     vector <int> quadroEnquadrado;
@@ -37,12 +73,12 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramento (vector<int> quadro){
     int tipoDeEnquadramento = 1; // Alterar de acordo com o teste
     vector<int> quadroDesenquadrado;
 
-    switch (tipoDeEnquadramento){
-    case 0:
+    switch (TIPO_DE_ENQUADRAMENTO){
+    case CONTAGEM_DE_CARACTERES:
         // quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(quadro);
         break;
     
-    case 1:
+    case INSERCAO_DE_BYTES:
         quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(quadro);
         break;
     }
