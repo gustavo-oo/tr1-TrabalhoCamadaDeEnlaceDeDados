@@ -97,11 +97,12 @@ void CamadaFisicaReceptora(vector<int> quadro){
     cout << "Bits decodificados: ";
     PrintVector(fluxo_bruto_de_bits);
 
-    CamadadeAplicacaoReceptora(fluxo_bruto_de_bits);
+    CamadaEnlaceDadosReceptora(fluxo_bruto_de_bits);
+    //CamadaDeAplicacaoReceptora(fluxo_bruto_de_bits);
 }
 
 //Converte os bits para uma string
-void CamadadeAplicacaoReceptora(vector<int> quadro){
+void CamadaDeAplicacaoReceptora(vector<int> quadro){
     string mensagem = BitsToString(quadro);
     
     AplicacaoReceptora(mensagem);

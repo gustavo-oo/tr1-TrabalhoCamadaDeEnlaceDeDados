@@ -41,7 +41,7 @@ vector<int> CamadaFisicaTransmissoraCodificacaoBipolar(vector<int> quadro);
 
 //Funções de Recepção
 void CamadaFisicaReceptora(vector<int> quadro);
-void CamadadeAplicacaoReceptora(vector<int> quadro);
+void CamadaDeAplicacaoReceptora(vector<int> quadro);
 void AplicacaoReceptora(string mensagem);
 
 //Funções de Decodificação
