@@ -13,13 +13,13 @@ using namespace std;
 
 extern uint8_t TIPO_DE_ENQUADRAMENTO;
 
-void CamadaEnlaceTransmissora(vector<int> quadro);
-vector<int> CamadaEnlaceTransmissoraEnquadramento(vector<int> quadro);
+void CamadaEnlaceDadosTransmissora(vector<int> quadro);
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadro);
 
-vector<int> CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres(vector<int> quadro);
-vector<int> CamadaEnlaceTransmissoraEnquadramentoInsercaoDeBytes(vector<int> quadro);
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes (vector<int> quadro);
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres (vector<int> quadro);
 
-vector<int> CamadaEnlaceTransmissoraControleDeErro(vector<int> quadro);
+vector<int> CamadaEnlaceDadosTransmissoraControleDeErro(vector<int> quadro);
 
 
 #endif

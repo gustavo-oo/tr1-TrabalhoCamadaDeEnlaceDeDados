@@ -3,25 +3,25 @@
 
 uint8_t TIPO_DE_ENQUADRAMENTO = 0; //mudar depois
 
-void CamadaEnlaceTransmissora(vector<int> quadro){
+void CamadaEnlaceDadosTransmissora(vector<int> quadro){
 
-    quadro = CamadaEnlaceTransmissoraEnquadramento(quadro);
+    quadro = CamadaEnlaceDadosTransmissoraEnquadramento(quadro);
 
-    quadro = CamadaEnlaceTransmissoraControleDeErro(quadro);
+    quadro = CamadaEnlaceDadosTransmissoraControleDeErro(quadro);
 
     CamadaFisicaTransmissora(quadro);
 }
 
-vector<int> CamadaEnlaceTransmissoraEnquadramento(vector<int> quadro){
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadro){
     vector<int> quadroEnquadrado;
 
     switch(TIPO_DE_ENQUADRAMENTO){
         case CONTAGEM_DE_CARACTERES:
-            quadroEnquadrado = CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres(quadro);
+            quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(quadro);
             break;
 
         case INSERCAO_DE_BYTES:
-            quadroEnquadrado = CamadaEnlaceTransmissoraEnquadramentoInsercaoDeBytes(quadro);
+            quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(quadro);
             break;
 
         case CODIGO_DE_HAMMING:
@@ -31,14 +31,14 @@ vector<int> CamadaEnlaceTransmissoraEnquadramento(vector<int> quadro){
     return quadroEnquadrado;
 }
 
-vector<int> CamadaEnlaceTransmissoraControleDeErro(vector<int> quadro){
+vector<int> CamadaEnlaceDadosTransmissoraControleDeErro(vector<int> quadro){
     return quadro;
 }
 
-vector<int> CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
     return quadro;
 }
 
-vector<int> CamadaEnlaceTransmissoraEnquadramentoInsercaoDeBytes (vector<int> quadro){
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int> quadro){
     return quadro;
 }
