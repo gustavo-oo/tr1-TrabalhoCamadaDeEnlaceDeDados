@@ -59,7 +59,7 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadro){
 }
 
 vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
-    int contagemCaracteres = quadro.size();
+    int contagemCaracteres = quadro.size()/8;
 
     vector <int> quadroEnquadrado = NumberToByte(contagemCaracteres);
 
@@ -73,9 +73,9 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(vecto
 vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
     vector<int> quadroDesenquadrado = {};
 
-    vector<int> contagemCaracteresEmBits = vector<int> (quadro.begin(), quadro.begin() + 7);
+    vector<int> contagemCaracteresEmBits = vector<int> (quadro.begin(), quadro.begin() + 8);
 
-    int contagemCaracteres = ByteToNumber(contagemCaracteresEmBits);
+    int contagemCaracteres = ByteToNumber(contagemCaracteresEmBits) * 8;
 
     for(int i = 8; i < contagemCaracteres + 8; i++){
         quadroDesenquadrado.push_back(quadro[i]);
