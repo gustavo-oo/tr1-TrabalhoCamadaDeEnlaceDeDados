@@ -32,7 +32,7 @@ void CamadaDeAplicacaoTransmissora(string mensagem){
     cout << "Mensagem para bits: ";
     PrintVector(quadro);
 
-    CamadaEnlaceTransmissoraEnquadramento(quadro);
+    CamadaEnlaceTransmissora(quadro);
     //CamadaFisicaTransmissora(quadro);
 }
 
