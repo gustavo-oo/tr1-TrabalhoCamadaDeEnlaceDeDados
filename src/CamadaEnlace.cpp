@@ -32,3 +32,26 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
 
     return quadroDesenquadrado;
 }
+
+vector<int> CamadaEnlaceDadosReceptoraEnquadramento (vector<int> quadro){
+    int tipoDeEnquadramento = 1; // Alterar de acordo com o teste
+    vector<int> quadroDesenquadrado;
+
+    switch (tipoDeEnquadramento){
+    case 0:
+        // quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(quadro);
+        break;
+    
+    case 1:
+        quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(quadro);
+        break;
+    }
+}
+
+vector<int> CamadaEnlaceDadosReceptora (vector<int> quadro){
+    CamadaEnlaceDadosReceptoraEnquadramento(quadro);
+
+    // CamadaEnlaceDadosReceptoraControleDeErro(quadro);
+
+    // CamadaDeAplicacaoReceptora(quadro);
+}

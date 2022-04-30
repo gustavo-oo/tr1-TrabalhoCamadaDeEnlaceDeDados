@@ -11,5 +11,7 @@ using namespace std;
 
 vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes (vector<int> quadro);
 vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes (vector<int> quadro);
+vector<int> CamadaEnlaceDadosReceptoraEnquadramento (vector<int> quadro);
+vector<int> CamadaEnlaceDadosReceptora (vector<int> quadro);
 
 #endif
