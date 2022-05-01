@@ -35,7 +35,7 @@ void CamadaEnlaceDadosTransmissora(vector<int> quadro){
     
     quadro = CamadaEnlaceDadosTransmissoraEnquadramento(quadro);
 
-    quadro = CamadaEnlaceDadosTransmissoraControleDeErro(quadro);
+   quadro = CamadaEnlaceDadosTransmissoraControleDeErro(quadro);
 
     CamadaFisicaTransmissora(quadro);
 }
@@ -107,8 +107,10 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
             current_byte = vector<int> (quadro.begin() + i, quadro.begin() + i + 8);
             previous_byte = vector<int> (quadro.begin() + i - 8, quadro.begin() + i);
         }
+
         if (current_byte != esc || previous_byte == esc)
             quadroDesenquadrado.push_back(quadro[i]);
+
     }
 
     return quadroDesenquadrado;
@@ -152,7 +154,7 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<i
     }
 
     //Bit de Paridade
-    quadroDesenquadrado.push_back(quadro[i]);
+    quadroDesenquadrado.push_back(quadro.back());
 
     return quadroDesenquadrado;
 }
