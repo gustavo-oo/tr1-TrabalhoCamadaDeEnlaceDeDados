@@ -79,16 +79,8 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(vecto
             quadroEnquadrado.push_back(quadroAtual[i]);
         }
 
-        cout << "\nQUADRO ENQUADRADO:";
-        PrintVector(quadroEnquadrado);
-        cout << "\n";
-
         quadrosEnfileirados.insert(quadrosEnfileirados.end(), quadroEnquadrado.begin(), quadroEnquadrado.end());
     }
-
-    cout << "\nQUADROS:";
-    PrintVector(quadrosEnfileirados);
-    cout << "\n";
 
     return quadrosEnfileirados;
 }
@@ -126,10 +118,6 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int
         quadrosEnfileirados.insert(quadrosEnfileirados.end(), quadroEnquadrado.begin(), quadroEnquadrado.end());
     }
 
-    cout << "\nQUADROS ENQUADRADOS:";
-    PrintVector(quadrosEnfileirados);
-    cout << "\n";
-
     return quadrosEnfileirados;
 }
 
@@ -151,15 +139,11 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
         }
     
 
-        cout << "Byte Atual: ";
-        PrintVector(current_byte);
-
         if(read){
             if(current_byte == flag && previous_byte != esc){
                 stop = 1;
             }else{
                 if (current_byte != esc || previous_byte == esc){
-                    cout << "DATA\n" << endl;
                     quadroDesenquadrado.insert(quadroDesenquadrado.end(), current_byte.begin(), current_byte.end());
                 }
             } 
@@ -167,21 +151,14 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
 
         if(current_byte == flag && previous_byte != esc && !stop){
             read = 1;
-            cout << "FLAG\n" << endl;
         }
 
         if(stop){
-            cout << "FLAG\n" << endl;
             read = 0;
             stop = 0;
         }
 
-        cout << "==============\n";
     }
-
-    cout << "\nQUADRO DESENQUADRADO:";
-    PrintVector(quadroDesenquadrado);
-    cout << "\n";
 
     return quadroDesenquadrado;
 }
@@ -228,15 +205,9 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<i
 
         contagemCaracteres = ByteToNumber(contagemCaracteresEmBits) * 8;
 
-        cout << "TESTE:" << contagemCaracteres << endl;
-
         for(i = j; i < j + contagemCaracteres; i++){
             quadroDesenquadrado.push_back(quadros[i]);
         }
-
-        cout << "\nQUADROS DESENQUADRADOS:";
-        PrintVector(quadroDesenquadrado);
-        cout << "\n";
 
         if(i == quadros.size()){
             break;
