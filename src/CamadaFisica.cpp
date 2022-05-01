@@ -103,7 +103,9 @@ void CamadaFisicaReceptora(vector<int> quadro){
 
 //Converte os bits para uma string
 void CamadaDeAplicacaoReceptora(vector<int> quadro){
-    string mensagem = BitsToString(quadro);
+    string mensagem = "";
+
+    mensagem += BitsToString(quadro);
     
     AplicacaoReceptora(mensagem);
 }
