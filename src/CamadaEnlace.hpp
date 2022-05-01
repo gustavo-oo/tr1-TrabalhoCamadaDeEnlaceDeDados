@@ -17,8 +17,12 @@
 
 #include <stdint.h>
 #include <vector>
+#include <algorithm>
+#include <functional>
 
 using namespace std;
+
+#define POLINOMIO_GERADOR vector<int> {1, 1, 0, 1}
 
 extern uint8_t TIPO_DE_ENQUADRAMENTO;
 extern uint8_t TIPO_DE_CONTROLE_DE_ERRO;

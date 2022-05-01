@@ -6,7 +6,7 @@
 #include <math.h>
 
 uint8_t TIPO_DE_ENQUADRAMENTO = CONTAGEM_DE_CARACTERES; //mudar depois
-uint8_t TIPO_DE_CONTROLE_DE_ERRO = BIT_DE_PARIDADE_PAR;
+uint8_t TIPO_DE_CONTROLE_DE_ERRO = CRC;
 
 vector<int> NumberToByte(int number){
     bitset<8> byte;
@@ -239,6 +239,24 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(vector<int> 
 }
 
 vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
+    vector<int> aux = vector<int> (quadro.begin(), quadro.begin() + POLINOMIO_GERADOR.size());
+    vector<int> crc;
+
+    for(int i = 0; i < quadro.size() - POLINOMIO_GERADOR.size(); i++){
+        // aux = aux ^ POLINOMIO_GERADOR;
+        if (aux[0] == 1)
+            transform(aux.begin(), aux.end(), POLINOMIO_GERADOR.begin(), aux.begin(), bit_xor<uint8_t>());
+        else
+            transform(aux.begin(), aux.end(), vector<int> {0, 0, 0, 0}, aux.begin(), bit_xor<uint8_t>());
+        crc = aux;
+        aux = vector<int> {aux[1], aux[2], aux[3], quadro[POLINOMIO_GERADOR.size() + i]};
+    }
+
+    cout << endl << endl << "crc: ";
+    for(int i = 0; i < crc.size(); i++)
+        cout << crc[i] << "0";
+    cout << endl << endl;
+
     return quadro;
 }
 vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro){
