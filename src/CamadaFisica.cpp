@@ -62,7 +62,7 @@ void CamadaFisicaTransmissora(vector<int> quadro){
 void MeioDeComunicacao(vector<int> fluxo_bruto_de_bits){
     vector<int> fluxo_bruto_de_bits_ponto_A, fluxo_bruto_de_bits_ponto_B;
 
-    int porcentagemDeErros = 10; //10%, 20%, 30%, 40%, ..., 100%
+    int porcentagemDeErros = 0; //10%, 20%, 30%, 40%, ..., 100%
 
     fluxo_bruto_de_bits_ponto_A = fluxo_bruto_de_bits;
 
