@@ -86,14 +86,25 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<i
 
 vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int> quadro) {
     vector <int> quadroEnquadrado = {};
-    quadroEnquadrado.push_back(BYTE_DE_FLAG);
+    vector <int> flag = NumberToByte(BYTE_DE_FLAG);
+    vector <int> esc = NumberToByte(ESC);
+    vector <int> current_byte = {};
+    int esc_inserted = 0;
+
+    quadroEnquadrado.insert(quadroEnquadrado.begin(), flag.begin(), flag.end());
 
     for (int i = 0; i < quadro.size(); i++){
-        if (quadro[i] == BYTE_DE_FLAG || quadro[i] == ESC)
-            quadroEnquadrado.push_back(ESC);
+        if (i % 8 == 0){
+            current_byte = vector<int> (quadro.begin() + i, quadro.begin() + i + 8);
+            esc_inserted = 0;
+        }
+        if ((current_byte == flag || current_byte == esc) && esc_inserted == 0){
+            quadroEnquadrado.insert(quadroEnquadrado.begin(), esc.begin(), esc.end());
+            esc_inserted = 1;
+        }
         quadroEnquadrado.push_back(quadro[i]);
     }
-    quadroEnquadrado.push_back(BYTE_DE_FLAG);
+    quadroEnquadrado.insert(quadroEnquadrado.begin(), flag.begin(), flag.end());
 
     return quadroEnquadrado;
 }
@@ -101,11 +112,18 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int
 vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> quadro) {
     vector <int> quadroDesenquadrado = {};
 
-    // Loop sem os elementos das pontas do quadro, por serem sempre o byte de flag
-    for (int i = 1; i < quadro.size() - 1; i++){
-        if (quadro[i] != ESC)
-            quadroDesenquadrado.push_back(quadro[i]);
-        else if (quadro[i - 1] == ESC)
+    vector <int> flag = NumberToByte(BYTE_DE_FLAG);
+    vector <int> esc = NumberToByte(ESC);
+    vector <int> previous_byte = {};
+    vector <int> current_byte = {};
+
+    // Loop sem os elementos das pontas do quadro, por serem sempre o byte de flag'
+    for (int i = 8; i < quadro.size() - 8; i++){
+        if (i % 8 == 0){
+            current_byte = vector<int> (quadro.begin() + i, quadro.begin() + i + 8);
+            previous_byte = vector<int> (quadro.begin() + i - 8, quadro.begin() + i);
+        }
+        if (current_byte != esc || previous_byte == esc)
             quadroDesenquadrado.push_back(quadro[i]);
     }
 
