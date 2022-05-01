@@ -5,7 +5,7 @@
 #include <bitset>
 #include <math.h>
 
-uint8_t TIPO_DE_ENQUADRAMENTO = CONTAGEM_DE_CARACTERES; //mudar depois
+uint8_t TIPO_DE_ENQUADRAMENTO = INSERCAO_DE_BYTES; //mudar depois
 uint8_t TIPO_DE_CONTROLE_DE_ERRO = BIT_DE_PARIDADE_PAR;
 
 vector<int> NumberToByte(int number){
@@ -31,66 +31,106 @@ int ByteToNumber(vector<int> byte){
     return number;
 }
 
-void CamadaEnlaceDadosTransmissora(vector<int> quadro){
+void CamadaEnlaceDadosTransmissora(vector<int> quadros){
+    vector<int> quadrosEnquadrados;
     
-    quadro = CamadaEnlaceDadosTransmissoraEnquadramento(quadro);
+    quadrosEnquadrados = CamadaEnlaceDadosTransmissoraEnquadramento(quadros);
 
-   quadro = CamadaEnlaceDadosTransmissoraControleDeErro(quadro);
+    quadrosEnquadrados = CamadaEnlaceDadosTransmissoraControleDeErro(quadrosEnquadrados);
 
-    CamadaFisicaTransmissora(quadro);
+    CamadaFisicaTransmissora(quadrosEnquadrados);
 }
 
-vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadro){
-    vector<int> quadroEnquadrado;
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadros){
+    vector<int> quadrosEnquadrados;
 
     switch(TIPO_DE_ENQUADRAMENTO){
         case CONTAGEM_DE_CARACTERES:
-            quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(quadro);
+            quadrosEnquadrados = CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(quadros);
             break;
 
         case INSERCAO_DE_BYTES:
-            quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(quadro);
+            quadrosEnquadrados = CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(quadros);
             break;
     }
 
-    return quadroEnquadrado;
+    return quadrosEnquadrados;
 }
 
-vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
-    int contagemCaracteres = quadro.size()/8;
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(vector<int> quadros){
+    vector<int> quadroAtual = {};
+    vector<int> quadrosEnfileirados = {};
+    vector <int> quadroEnquadrado = {};
+    int quantidadeBytes;
 
-    vector <int> quadroEnquadrado = NumberToByte(contagemCaracteres);
+    for(int j = 0; j < quadros.size(); j += TAMANHO_QUADRO_BYTES * 8){
 
-    for(int i = 0; i < quadro.size(); i++){
-        quadroEnquadrado.push_back(quadro[i]);
+        if(j + TAMANHO_QUADRO_BYTES * 8 > quadros.size()){
+            quadroAtual = vector<int> (quadros.begin() + j, quadros.end());
+        }else{
+            quadroAtual = vector<int> (quadros.begin() + j, quadros.begin() + j + TAMANHO_QUADRO_BYTES * 8);
+        }
+
+        quantidadeBytes = quadroAtual.size()/8;
+
+        quadroEnquadrado = NumberToByte(quantidadeBytes);
+
+        for(int i = 0; i < quantidadeBytes * 8; i++){
+            quadroEnquadrado.push_back(quadroAtual[i]);
+        }
+
+        cout << "\nQUADRO ENQUADRADO:";
+        PrintVector(quadroEnquadrado);
+        cout << "\n";
+
+        quadrosEnfileirados.insert(quadrosEnfileirados.end(), quadroEnquadrado.begin(), quadroEnquadrado.end());
     }
 
-    return quadroEnquadrado;
+    cout << "\nQUADROS:";
+    PrintVector(quadrosEnfileirados);
+    cout << "\n";
+
+    return quadrosEnfileirados;
 }
 
-vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int> quadro) {
-    vector <int> quadroEnquadrado = {};
+vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int> quadros) {
+    vector <int> quadroEnquadrado = {}, quadroAtual = {}, quadrosEnfileirados = {};
     vector <int> flag = NumberToByte(BYTE_DE_FLAG);
     vector <int> esc = NumberToByte(ESC);
     vector <int> current_byte = {};
     int esc_inserted = 0;
 
-    quadroEnquadrado.insert(quadroEnquadrado.begin(), flag.begin(), flag.end());
+    for(int j = 0; j < quadros.size(); j += TAMANHO_QUADRO_BYTES * 8){
 
-    for (int i = 0; i < quadro.size(); i++){
-        if (i % 8 == 0){
-            current_byte = vector<int> (quadro.begin() + i, quadro.begin() + i + 8);
-            esc_inserted = 0;
+        if(j + TAMANHO_QUADRO_BYTES * 8 > quadros.size()){
+            quadroAtual = vector<int> (quadros.begin() + j, quadros.end());
+        }else{
+            quadroAtual = vector<int> (quadros.begin() + j, quadros.begin() + j + TAMANHO_QUADRO_BYTES * 8);
         }
-        if ((current_byte == flag || current_byte == esc) && esc_inserted == 0){
-            quadroEnquadrado.insert(quadroEnquadrado.begin(), esc.begin(), esc.end());
-            esc_inserted = 1;
+
+        quadroEnquadrado = flag;
+
+        for (int i = 0; i < quadroAtual.size(); i++){
+            if (i % 8 == 0){
+                current_byte = vector<int> (quadroAtual.begin() + i, quadroAtual.begin() + i + 8);
+                esc_inserted = 0;
+            }
+            if ((current_byte == flag || current_byte == esc) && esc_inserted == 0){
+                quadroEnquadrado.insert(quadroEnquadrado.end(), esc.begin(), esc.end());
+                esc_inserted = 1;
+            }
+            quadroEnquadrado.push_back(quadroAtual[i]);
         }
-        quadroEnquadrado.push_back(quadro[i]);
+        quadroEnquadrado.insert(quadroEnquadrado.end(), flag.begin(), flag.end());
+
+        quadrosEnfileirados.insert(quadrosEnfileirados.end(), quadroEnquadrado.begin(), quadroEnquadrado.end());
     }
-    quadroEnquadrado.insert(quadroEnquadrado.begin(), flag.begin(), flag.end());
 
-    return quadroEnquadrado;
+    cout << "\nQUADROS ENQUADRADOS:";
+    PrintVector(quadrosEnfileirados);
+    cout << "\n";
+
+    return quadrosEnfileirados;
 }
 
 vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> quadro) {
@@ -100,63 +140,115 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
     vector <int> esc = NumberToByte(ESC);
     vector <int> previous_byte = {};
     vector <int> current_byte = {};
+    int read = 0, stop = 0;
 
     // Loop sem os elementos das pontas do quadro, por serem sempre o byte de flag'
-    for (int i = 8; i < quadro.size() - 8; i++){
-        if (i % 8 == 0){
-            current_byte = vector<int> (quadro.begin() + i, quadro.begin() + i + 8);
+    for (int i = 0; i < quadro.size(); i += 8){
+        current_byte = vector<int> (quadro.begin() + i, quadro.begin() + i + 8);
+
+        if(i >= 8){
             previous_byte = vector<int> (quadro.begin() + i - 8, quadro.begin() + i);
         }
+    
 
-        if (current_byte != esc || previous_byte == esc)
-            quadroDesenquadrado.push_back(quadro[i]);
+        cout << "Byte Atual: ";
+        PrintVector(current_byte);
 
+        if(read){
+            if(current_byte == flag && previous_byte != esc){
+                stop = 1;
+            }else{
+                if (current_byte != esc || previous_byte == esc){
+                    cout << "DATA\n" << endl;
+                    quadroDesenquadrado.insert(quadroDesenquadrado.end(), current_byte.begin(), current_byte.end());
+                }
+            } 
+        }
+
+        if(current_byte == flag && previous_byte != esc && !stop){
+            read = 1;
+            cout << "FLAG\n" << endl;
+        }
+
+        if(stop){
+            cout << "FLAG\n" << endl;
+            read = 0;
+            stop = 0;
+        }
+
+        cout << "==============\n";
     }
+
+    cout << "\nQUADRO DESENQUADRADO:";
+    PrintVector(quadroDesenquadrado);
+    cout << "\n";
 
     return quadroDesenquadrado;
 }
 
 void CamadaEnlaceDadosReceptora (vector<int> quadro){
-    quadro = CamadaEnlaceDadosReceptoraEnquadramento(quadro);
-
     quadro = CamadaEnlaceDadosReceptoraControleDeErro(quadro);
+
+    quadro = CamadaEnlaceDadosReceptoraEnquadramento(quadro);
 
     CamadaDeAplicacaoReceptora(quadro);
 }
 
-vector<int> CamadaEnlaceDadosReceptoraEnquadramento (vector<int> quadro){
-    vector<int> quadroDesenquadrado;
+vector<int> CamadaEnlaceDadosReceptoraEnquadramento (vector<int> quadros){
+    vector<int> quadrosDesenquadrados;
 
     switch (TIPO_DE_ENQUADRAMENTO){
     case CONTAGEM_DE_CARACTERES:
-        quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(quadro);
+        quadrosDesenquadrados = CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(quadros);
         break;
     
     case INSERCAO_DE_BYTES:
-        quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(quadro);
+        quadrosDesenquadrados = CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(quadros);
         break;
     }
 
-    return quadroDesenquadrado;
+    return quadrosDesenquadrados;
 }
 
 
-vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<int> quadro){
+vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<int> quadros){
     vector<int> quadroDesenquadrado = {};
-
-    vector<int> contagemCaracteresEmBits = vector<int> (quadro.begin(), quadro.begin() + 8);
-
-    int contagemCaracteres = ByteToNumber(contagemCaracteresEmBits) * 8;
-
+    vector<int> quadrosEnfileirados = {};
+    vector<int> contagemCaracteresEmBits = {};
+    int contagemCaracteres = 0;
     int i;
-    for(i = 8; i < contagemCaracteres + 8; i++){
-        quadroDesenquadrado.push_back(quadro[i]);
+
+    cout << "\nQUADROS:";
+    PrintVector(quadros);
+    cout << "\n";
+
+    for(int j = 0;;){
+        contagemCaracteresEmBits = vector<int> (quadros.begin() + j, quadros.begin() + j + 8);
+        j += 8;
+
+        contagemCaracteres = ByteToNumber(contagemCaracteresEmBits) * 8;
+
+        cout << "TESTE:" << contagemCaracteres << endl;
+
+        for(i = j; i < j + contagemCaracteres; i++){
+            quadroDesenquadrado.push_back(quadros[i]);
+        }
+
+        cout << "\nQUADROS DESENQUADRADOS:";
+        PrintVector(quadroDesenquadrado);
+        cout << "\n";
+
+        if(i == quadros.size()){
+            break;
+        }
+
+        j = i;
+        i = 0;
     }
 
-    //Bit de Paridade
-    quadroDesenquadrado.push_back(quadro.back());
+    quadrosEnfileirados.insert(quadrosEnfileirados.end(), quadroDesenquadrado.begin(), quadroDesenquadrado.end());
 
-    return quadroDesenquadrado;
+    return quadrosEnfileirados;
 }
 
 vector<int> CamadaEnlaceDadosTransmissoraControleDeErro(vector<int> quadro){
