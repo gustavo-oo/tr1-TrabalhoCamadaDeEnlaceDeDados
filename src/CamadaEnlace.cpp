@@ -205,15 +205,9 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<i
 
         contagemCaracteres = ByteToNumber(contagemCaracteresEmBits) * 8;
 
-        cout << "TESTE:" << contagemCaracteres << endl;
-
         for(i = j; i < j + contagemCaracteres; i++){
             quadroDesenquadrado.push_back(quadros[i]);
         }
-
-        cout << "\nQUADROS DESENQUADRADOS:";
-        PrintVector(quadroDesenquadrado);
-        cout << "\n";
 
         if(i == quadros.size()){
             break;

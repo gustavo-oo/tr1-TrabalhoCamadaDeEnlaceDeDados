@@ -21,8 +21,8 @@ void AplicacaoTransmissora(){
     getline(cin, mensagem);
 
     TransmitirMensagem(mensagem, CODIFICACAO_BINARIA);
-    //TransmitirMensagem(mensagem, CODIFICACAO_BIPOLAR);
-    //TransmitirMensagem(mensagem, CODIFICACAO_MANCHESTER);
+    TransmitirMensagem(mensagem, CODIFICACAO_BIPOLAR);
+    TransmitirMensagem(mensagem, CODIFICACAO_MANCHESTER);
 }
 
 // Converte a mensagem para bits
@@ -62,6 +62,8 @@ void CamadaFisicaTransmissora(vector<int> quadro){
 void MeioDeComunicacao(vector<int> fluxo_bruto_de_bits){
     vector<int> fluxo_bruto_de_bits_ponto_A, fluxo_bruto_de_bits_ponto_B;
 
+    int porcentagemDeErros = 10; //10%, 20%, 30%, 40%, ..., 100%
+
     fluxo_bruto_de_bits_ponto_A = fluxo_bruto_de_bits;
 
     cout << "Bit sendo transmitidos..." << endl;
@@ -69,7 +71,21 @@ void MeioDeComunicacao(vector<int> fluxo_bruto_de_bits){
     PrintVector(fluxo_bruto_de_bits_ponto_A);
 
     for(int i = 0; fluxo_bruto_de_bits_ponto_A.size() != fluxo_bruto_de_bits_ponto_B.size(); i++){
-        fluxo_bruto_de_bits_ponto_B.push_back(fluxo_bruto_de_bits_ponto_A[i]);
+        if(rand() % 100 < porcentagemDeErros){
+            if(fluxo_bruto_de_bits_ponto_A[i] == VOLTAGEM_POSITIVA){
+                fluxo_bruto_de_bits_ponto_B.push_back(fluxo_bruto_de_bits_ponto_A[i] - VOLTAGEM_POSITIVA);
+
+            }else{
+                if(fluxo_bruto_de_bits_ponto_A[i] == VOLTAGEM_NEGATIVA){
+                    fluxo_bruto_de_bits_ponto_B.push_back(fluxo_bruto_de_bits_ponto_A[i] - VOLTAGEM_NEGATIVA);
+
+                }else{
+                    fluxo_bruto_de_bits_ponto_B.push_back(fluxo_bruto_de_bits_ponto_A[i] + VOLTAGEM_POSITIVA);
+                }
+            }
+        }else{
+            fluxo_bruto_de_bits_ponto_B.push_back(fluxo_bruto_de_bits_ponto_A[i]);
+        }
     }
 
     cout << "Ponto B: ";
