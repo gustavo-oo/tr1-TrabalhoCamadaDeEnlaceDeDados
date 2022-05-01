@@ -21,8 +21,8 @@ void AplicacaoTransmissora(){
     getline(cin, mensagem);
 
     TransmitirMensagem(mensagem, CODIFICACAO_BINARIA);
-    TransmitirMensagem(mensagem, CODIFICACAO_BIPOLAR);
-    TransmitirMensagem(mensagem, CODIFICACAO_MANCHESTER);
+    //TransmitirMensagem(mensagem, CODIFICACAO_BIPOLAR);
+    //TransmitirMensagem(mensagem, CODIFICACAO_MANCHESTER);
 }
 
 // Converte a mensagem para bits
