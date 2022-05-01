@@ -35,7 +35,7 @@ void CamadaEnlaceDadosTransmissora(vector<int> quadro){
     
     quadro = CamadaEnlaceDadosTransmissoraEnquadramento(quadro);
 
-   quadro = CamadaEnlaceDadosTransmissoraControleDeErro(quadro);
+    quadro = CamadaEnlaceDadosTransmissoraControleDeErro(quadro);
 
     CamadaFisicaTransmissora(quadro);
 }
@@ -117,9 +117,9 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
 }
 
 void CamadaEnlaceDadosReceptora (vector<int> quadro){
-    quadro = CamadaEnlaceDadosReceptoraEnquadramento(quadro);
-
     quadro = CamadaEnlaceDadosReceptoraControleDeErro(quadro);
+
+    quadro = CamadaEnlaceDadosReceptoraEnquadramento(quadro);
 
     CamadaDeAplicacaoReceptora(quadro);
 }
@@ -238,28 +238,75 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(vector<int> 
     return quadro;
 }
 
+// vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
+//     vector<int> aux = vector<int> (quadro.begin(), quadro.begin() + POLINOMIO_GERADOR.size());
+//     vector<int> crc;
+
+//     for(int i = 0; i < quadro.size() - POLINOMIO_GERADOR.size(); i++){
+//         // aux = aux ^ POLINOMIO_GERADOR;
+//         if (aux[0] == 1)
+//             transform(aux.begin(), aux.end(), POLINOMIO_GERADOR.begin(), aux.begin(), bit_xor<uint8_t>());
+//         else
+//             transform(aux.begin(), aux.end(), vector<int> {0, 0, 0, 0}, aux.begin(), bit_xor<uint8_t>());
+//         crc = aux;
+//         aux = vector<int> {aux[1], aux[2], aux[3], quadro[POLINOMIO_GERADOR.size() + i]};
+//     }
+
+//     cout << endl << endl << "crc: ";
+//     for(int i = 0; i < crc.size(); i++)
+//         cout << crc[i] << "0";
+//     cout << endl << endl;
+
+//     return quadro;
+// }
+
+vector<int> VectorXor(vector<int> vetor1, vector<int> vetor2){
+    vector<int> resultado = {};
+    if(vetor1.size() == vetor2.size()){
+        for(int i = 0; i < vetor1.size(); i++){
+            resultado.push_back(vetor1[i] ^ vetor2[i%4]);
+        }
+
+        return resultado;
+    }
+    return {0};
+}
+
+vector<int> DeleteFirstElement(vector<int> vetor){
+    vetor.erase(vetor.begin());
+    return vetor;
+}
+
 vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
     vector<int> aux = vector<int> (quadro.begin(), quadro.begin() + POLINOMIO_GERADOR.size());
     vector<int> crc;
 
-    for(int i = 0; i < quadro.size() - POLINOMIO_GERADOR.size(); i++){
-        // aux = aux ^ POLINOMIO_GERADOR;
-        if (aux[0] == 1)
-            transform(aux.begin(), aux.end(), POLINOMIO_GERADOR.begin(), aux.begin(), bit_xor<uint8_t>());
-        else
-            transform(aux.begin(), aux.end(), vector<int> {0, 0, 0, 0}, aux.begin(), bit_xor<uint8_t>());
-        crc = aux;
-        aux = vector<int> {aux[1], aux[2], aux[3], quadro[POLINOMIO_GERADOR.size() + i]};
+    for(int i = 0; i <= quadro.size() - POLINOMIO_GERADOR.size(); i++){
+        if(aux[0] == BIT_0){
+            aux = VectorXor(aux, {0,0,0,0});
+        }else{
+            aux = VectorXor(aux, POLINOMIO_GERADOR);
+        }
+
+        aux = DeleteFirstElement(aux);
+        aux.push_back(quadro[POLINOMIO_GERADOR.size() + i]);
     }
 
-    cout << endl << endl << "crc: ";
-    for(int i = 0; i < crc.size(); i++)
-        cout << crc[i] << "0";
-    cout << endl << endl;
+    crc = DeleteFirstElement(aux);
 
-    return quadro;
+    
+
+    quadro.insert(quadro.end(), crc.begin(), crc.end());
+
+    cout << "QUADRO COM CRC: ";
+    PrintVector(quadro);
+    cout << endl;
+
+    return crc;
 }
+
+
 vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro){
-    return quadro;
+    return vector<int> (quadro.begin(), quadro.end() -3);
 }
 
