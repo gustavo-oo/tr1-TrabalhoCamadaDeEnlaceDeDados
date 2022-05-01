@@ -88,7 +88,7 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int
         }
         quadroEnquadrado.push_back(quadro[i]);
     }
-    quadroEnquadrado.insert(quadroEnquadrado.begin(), flag.begin(), flag.end());
+    quadroEnquadrado.insert(quadroEnquadrado.end(), flag.begin(), flag.end());
 
     return quadroEnquadrado;
 }
