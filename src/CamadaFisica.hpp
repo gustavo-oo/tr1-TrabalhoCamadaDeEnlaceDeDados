@@ -5,9 +5,9 @@
 #define CODIFICACAO_MANCHESTER  1
 #define CODIFICACAO_BIPOLAR     2
 
-#define VOLTAGEM_POSITIVA 3
+#define VOLTAGEM_POSITIVA 1
 #define VOLTAGEM_ZERO 0
-#define VOLTAGEM_NEGATIVA -3
+#define VOLTAGEM_NEGATIVA -1
 
 #define BIT_0 0
 #define BIT_1 1
@@ -25,7 +25,7 @@ extern uint8_t TIPO_DE_CODIFICACAO;
 vector<int> StringToBits(string mensagem);
 string BitsToString(vector<int> quadro);
 void PrintVector(vector<int> vetor);
-void TransmitirMensagem(string mensagem, uint8_t codificacao);
+void TransmitirMensagem(string mensagem);
 vector<int> InitClock(int tamanho);
 
 //Funções de Transmissão

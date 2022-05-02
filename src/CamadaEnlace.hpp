@@ -27,8 +27,14 @@ using namespace std;
 extern uint8_t TIPO_DE_ENQUADRAMENTO;
 extern uint8_t TIPO_DE_CONTROLE_DE_ERRO;
 
+//Funções Auxiliares
+
 vector<int> NumberToByte(int number);
 int ByteToNumber(vector<int> byte);
+vector<int> VectorXor(vector<int> vetor1, vector<int> vetor2);
+vector<int> DeleteFirstElement(vector<int> vetor);
+
+//Funções da Camda de Enlace de Dados
 
 void CamadaEnlaceDadosTransmissora(vector<int> quadros);
 vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(vector<int> quadros);

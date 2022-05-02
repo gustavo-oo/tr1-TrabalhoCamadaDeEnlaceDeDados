@@ -9,8 +9,9 @@
 
 using namespace std;
 
-//Variavel que define a codificação a ser utilizada
-uint8_t TIPO_DE_CODIFICACAO;
+//Variáveis que alteram comportamento do programa
+uint8_t TIPO_DE_CODIFICACAO = CODIFICACAO_BINARIA; //CODIFICACAO_BINARIA, CODIFICACAO_MANCHESTER ou CODIFICACAO_BIPOLAR
+uint8_t PORCENTAGEM_DE_ERROS = 10; // 0, 10, 20, 30, ..., 100
 
 // ============== Funções dos Protocolos da Camada Física ==============
 
@@ -20,9 +21,7 @@ void AplicacaoTransmissora(){
     cout << "Digite a mensagem a ser enviada: ";
     getline(cin, mensagem);
 
-    TransmitirMensagem(mensagem, CODIFICACAO_BINARIA);
-    TransmitirMensagem(mensagem, CODIFICACAO_BIPOLAR);
-    TransmitirMensagem(mensagem, CODIFICACAO_MANCHESTER);
+    TransmitirMensagem(mensagem);
 }
 
 // Converte a mensagem para bits
@@ -62,16 +61,15 @@ void CamadaFisicaTransmissora(vector<int> quadro){
 void MeioDeComunicacao(vector<int> fluxo_bruto_de_bits){
     vector<int> fluxo_bruto_de_bits_ponto_A, fluxo_bruto_de_bits_ponto_B;
 
-    int porcentagemDeErros = 0; //10%, 20%, 30%, 40%, ..., 100%
-
     fluxo_bruto_de_bits_ponto_A = fluxo_bruto_de_bits;
 
     cout << "Bit sendo transmitidos..." << endl;
     cout << "Ponto A: ";
     PrintVector(fluxo_bruto_de_bits_ponto_A);
+    srand(time(0));
 
     for(int i = 0; fluxo_bruto_de_bits_ponto_A.size() != fluxo_bruto_de_bits_ponto_B.size(); i++){
-        if(rand() % 100 < porcentagemDeErros){
+        if(rand() % 100 < PORCENTAGEM_DE_ERROS){
             if(fluxo_bruto_de_bits_ponto_A[i] == VOLTAGEM_POSITIVA){
                 fluxo_bruto_de_bits_ponto_B.push_back(fluxo_bruto_de_bits_ponto_A[i] - VOLTAGEM_POSITIVA);
 
@@ -293,9 +291,7 @@ void PrintVector(vector<int> vetor){
 }
 
 // Altera a codificação a ser utilizada e passa a mensagem para a camada de Transmissão
-void TransmitirMensagem(string mensagem, uint8_t codificacao){
-    TIPO_DE_CODIFICACAO = codificacao;
-
+void TransmitirMensagem(string mensagem){
     switch(TIPO_DE_CODIFICACAO){
         case CODIFICACAO_BINARIA:
             cout << "\n=========== CODIFICAÇÃO BINÁRIA ===========" << endl;
