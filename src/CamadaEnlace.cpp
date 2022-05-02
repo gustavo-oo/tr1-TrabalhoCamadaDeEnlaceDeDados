@@ -343,11 +343,14 @@ vector<int> DeleteFirstElement(vector<int> vetor){
 
 vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
     vector<int> aux = vector<int> (quadro.begin(), quadro.begin() + POLINOMIO_GERADOR.size());
-    vector<int> crc;
+    vector<int> crc(POLINOMIO_GERADOR.size() - 1, 0);
+
+    // Adicionando n bits 0 ao final do quadro
+    quadro.insert(quadro.end(), crc.begin(), crc.end());
 
     for(int i = 0; i <= quadro.size() - POLINOMIO_GERADOR.size(); i++){
         if(aux[0] == BIT_0){
-            aux = VectorXor(aux, {0,0,0,0});
+            aux = VectorXor(aux, vector<int> (POLINOMIO_GERADOR.size(), 0));
         }else{
             aux = VectorXor(aux, POLINOMIO_GERADOR);
         }
@@ -358,14 +361,10 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
     }
 
     crc = aux;
-
-    // cout << "QUADRO SEM CRC: ";
-    // PrintVector(quadro);
     
-    // for (int i = 0; i < crc.size(); i++){
-    //     quadro[quadro.size() - crc.size() + i] = crc[i];
-    // }
-    quadro.insert(quadro.end(), crc.begin(), crc.end());
+    for (int i = 0; i < crc.size(); i++){
+        quadro[quadro.size() - crc.size() + i] = crc[i];
+    }
 
     cout << "QUADRO COM CRC: ";
     PrintVector(quadro);
@@ -377,23 +376,18 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
 
 vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro){
     vector<int> crc = vector<int> (quadro.end() - POLINOMIO_GERADOR.size() + 1, quadro.end());
-    quadro = vector<int> (quadro.begin(), quadro.end() - crc.size());
-    vector<int> quadroSemCRC = quadro;
-
-    cout << "QUADRO SEM CRC: ";
-    PrintVector(quadro);
-
-    for (int i = 0; i < crc.size(); i++)
-        quadro[quadro.size() - crc.size() + i] = crc[i];
+    vector<int> quadroSemCRC = vector<int> (quadro.begin(), quadro.end() - crc.size());
 
     cout << "QUADRO TESTADO: ";
     PrintVector(quadro);
+    cout << "Verificando CRC..." << endl;
+
 
     vector<int> aux = vector<int> (quadro.begin(), quadro.begin() + POLINOMIO_GERADOR.size());
 
     for(int i = 0; i <= quadro.size() - POLINOMIO_GERADOR.size(); i++){
         if(aux[0] == BIT_0){
-            aux = VectorXor(aux, {0,0,0,0});
+            aux = VectorXor(aux, vector<int> (POLINOMIO_GERADOR.size(), 0));
         }else{
             aux = VectorXor(aux, POLINOMIO_GERADOR);
         }
@@ -405,7 +399,7 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro){
 
     crc = aux;
 
-    if (crc != vector<int> (quadroSemCRC.end() - crc.size(), quadroSemCRC.end()))
+    if (crc != vector<int> (POLINOMIO_GERADOR.size() - 1, 0))
         cout << "ERRO DETECTADO!";
     
     return quadroSemCRC;
