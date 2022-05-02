@@ -353,13 +353,18 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
         }
 
         aux = DeleteFirstElement(aux);
-        aux.push_back(quadro[POLINOMIO_GERADOR.size() + i]);
+        if (i < quadro.size() - POLINOMIO_GERADOR.size())
+            aux.push_back(quadro[POLINOMIO_GERADOR.size() + i]);
     }
 
-    crc = DeleteFirstElement(aux);
+    crc = aux;
 
+    // cout << "QUADRO SEM CRC: ";
+    // PrintVector(quadro);
     
-
+    // for (int i = 0; i < crc.size(); i++){
+    //     quadro[quadro.size() - crc.size() + i] = crc[i];
+    // }
     quadro.insert(quadro.end(), crc.begin(), crc.end());
 
     cout << "QUADRO COM CRC: ";
@@ -371,6 +376,38 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
 
 
 vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro){
-    return vector<int> (quadro.begin(), quadro.end() -3);
+    vector<int> crc = vector<int> (quadro.end() - POLINOMIO_GERADOR.size() + 1, quadro.end());
+    quadro = vector<int> (quadro.begin(), quadro.end() - crc.size());
+    vector<int> quadroSemCRC = quadro;
+
+    cout << "QUADRO SEM CRC: ";
+    PrintVector(quadro);
+
+    for (int i = 0; i < crc.size(); i++)
+        quadro[quadro.size() - crc.size() + i] = crc[i];
+
+    cout << "QUADRO TESTADO: ";
+    PrintVector(quadro);
+
+    vector<int> aux = vector<int> (quadro.begin(), quadro.begin() + POLINOMIO_GERADOR.size());
+
+    for(int i = 0; i <= quadro.size() - POLINOMIO_GERADOR.size(); i++){
+        if(aux[0] == BIT_0){
+            aux = VectorXor(aux, {0,0,0,0});
+        }else{
+            aux = VectorXor(aux, POLINOMIO_GERADOR);
+        }
+
+        aux = DeleteFirstElement(aux);
+        if (i < quadro.size() - POLINOMIO_GERADOR.size())
+            aux.push_back(quadro[POLINOMIO_GERADOR.size() + i]);
+    }
+
+    crc = aux;
+
+    if (crc != vector<int> (quadroSemCRC.end() - crc.size(), quadroSemCRC.end()))
+        cout << "ERRO DETECTADO!";
+    
+    return quadroSemCRC;
 }
 
