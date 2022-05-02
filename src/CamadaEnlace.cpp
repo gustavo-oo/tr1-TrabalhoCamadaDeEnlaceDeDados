@@ -33,7 +33,7 @@ int ByteToNumber(vector<int> byte){
 
 void CamadaEnlaceDadosTransmissora(vector<int> quadros){
     vector<int> quadrosEnquadrados;
-    
+
     quadrosEnquadrados = CamadaEnlaceDadosTransmissoraEnquadramento(quadros);
 
     quadrosEnquadrados = CamadaEnlaceDadosTransmissoraControleDeErro(quadrosEnquadrados);
@@ -137,7 +137,7 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
         if(i >= 8){
             previous_byte = vector<int> (quadro.begin() + i - 8, quadro.begin() + i);
         }
-    
+
 
         if(read){
             if(current_byte == flag && previous_byte != esc){
@@ -146,7 +146,7 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
                 if (current_byte != esc || previous_byte == esc){
                     quadroDesenquadrado.insert(quadroDesenquadrado.end(), current_byte.begin(), current_byte.end());
                 }
-            } 
+            }
         }
 
         if(current_byte == flag && previous_byte != esc && !stop){
@@ -178,7 +178,7 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramento (vector<int> quadros){
     case CONTAGEM_DE_CARACTERES:
         quadrosDesenquadrados = CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(quadros);
         break;
-    
+
     case INSERCAO_DE_BYTES:
         quadrosDesenquadrados = CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(quadros);
         break;
@@ -254,7 +254,7 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadePar(vector<int
     }else{
         quadro.push_back(BIT_1);
     }
-   
+
     return quadro;
 }
 
@@ -288,41 +288,53 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(vector<int> q
     }
 
     if(counter % 2 != 0){
-        cout << "\n" << "ERRO DETECTADO" << endl; 
+        cout << "\n" << "ERRO DETECTADO" << endl;
     }
 
     return quadroSemBitDeParidade;
 }
 
+int bitParidade(vector<int> bits, int powder){
+    int shift = BIT_1 << powder;
+    int bitDeParidade;
+    int counter = 0;
+    for(int i = 0; i < bits.size(); i++){
+        if((i & shift) == shift){
+            if(bits[i] == BIT_1){
+                counter++;
+            }
+        }
+    }
+
+    bitDeParidade = counter % 2 == 0 ? BIT_0 : BIT_1;
+    return bitDeParidade;
+}
+
 vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCodigoDeHamming(vector<int> quadro){
-    return quadro;
+    vector<int> quadroCodificado;
+    int powder = 0;
+
+    for(int i = 0; i < quadro.size(); i++){
+        if(quadroCodificado.size() + 1 == pow(2,powder)){
+            quadroCodificado.push_back(bitParidade(quadro, powder));
+            powder++;
+        } else
+            quadroCodificado.push_back(quadro[i]);
+    }
+    cout << "QUADRO   ORIGINAL: ";
+    PrintVector(quadro);
+    cout << "QUADRO CODIFICADO: ";
+    PrintVector(quadroCodificado);
+
+    // Retornando o quadro para não quebrar nada,
+    // uma vez que a funcao de recepcao não foi implementada
+    return quadro; // return quadroCodificado;
+
 }
 
 vector<int> CamadaEnlaceDadosReceptoraControleDeErroCodigoDeHamming(vector<int> quadro){
     return quadro;
 }
-
-// vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
-//     vector<int> aux = vector<int> (quadro.begin(), quadro.begin() + POLINOMIO_GERADOR.size());
-//     vector<int> crc;
-
-//     for(int i = 0; i < quadro.size() - POLINOMIO_GERADOR.size(); i++){
-//         // aux = aux ^ POLINOMIO_GERADOR;
-//         if (aux[0] == 1)
-//             transform(aux.begin(), aux.end(), POLINOMIO_GERADOR.begin(), aux.begin(), bit_xor<uint8_t>());
-//         else
-//             transform(aux.begin(), aux.end(), vector<int> {0, 0, 0, 0}, aux.begin(), bit_xor<uint8_t>());
-//         crc = aux;
-//         aux = vector<int> {aux[1], aux[2], aux[3], quadro[POLINOMIO_GERADOR.size() + i]};
-//     }
-
-//     cout << endl << endl << "crc: ";
-//     for(int i = 0; i < crc.size(); i++)
-//         cout << crc[i] << "0";
-//     cout << endl << endl;
-
-//     return quadro;
-// }
 
 vector<int> VectorXor(vector<int> vetor1, vector<int> vetor2){
     vector<int> resultado = {};
@@ -361,7 +373,7 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
     }
 
     crc = aux;
-    
+
     for (int i = 0; i < crc.size(); i++){
         quadro[quadro.size() - crc.size() + i] = crc[i];
     }
@@ -401,7 +413,7 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(vector<int> quadro){
 
     if (crc != vector<int> (POLINOMIO_GERADOR.size() - 1, 0))
         cout << "ERRO DETECTADO!";
-    
+
     return quadroSemCRC;
 }
 
