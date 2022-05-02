@@ -5,8 +5,8 @@
 #include <bitset>
 #include <math.h>
 
-uint8_t TIPO_DE_ENQUADRAMENTO = CONTAGEM_DE_CARACTERES; //mudar depois
-uint8_t TIPO_DE_CONTROLE_DE_ERRO = CRC;
+uint8_t TIPO_DE_ENQUADRAMENTO = INSERCAO_DE_BYTES; //CONTAGEM_DE_CARACTERES ou INSERCAO_DE_BYTES
+uint8_t TIPO_DE_CONTROLE_DE_ERRO = BIT_DE_PARIDADE_PAR; //BIT_DE_PARIDADE_PAR, CRC ou CODIGO_DE_HAMMING
 
 vector<int> NumberToByte(int number){
     bitset<8> byte;
@@ -82,6 +82,9 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(vecto
         quadrosEnfileirados.insert(quadrosEnfileirados.end(), quadroEnquadrado.begin(), quadroEnquadrado.end());
     }
 
+    cout << "Quadros com Contagem de Caracteres: ";
+    PrintVector(quadrosEnfileirados);
+
     return quadrosEnfileirados;
 }
 
@@ -117,6 +120,9 @@ vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(vector<int
 
         quadrosEnfileirados.insert(quadrosEnfileirados.end(), quadroEnquadrado.begin(), quadroEnquadrado.end());
     }
+
+    cout << "Quadros com Insercao de Bytes: ";
+    PrintVector(quadrosEnfileirados);
 
     return quadrosEnfileirados;
 }
@@ -160,6 +166,9 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(vector<int> q
 
     }
 
+    cout << "Quadros Desenquadrados Insercao de Bytes: ";
+    PrintVector(quadroDesenquadrado);
+
     return quadroDesenquadrado;
 }
 
@@ -195,10 +204,6 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<i
     int contagemCaracteres = 0;
     int i;
 
-    cout << "\nQUADROS:";
-    PrintVector(quadros);
-    cout << "\n";
-
     for(int j = 0;;){
         contagemCaracteresEmBits = vector<int> (quadros.begin() + j, quadros.begin() + j + 8);
         j += 8;
@@ -218,6 +223,9 @@ vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(vector<i
     }
 
     quadrosEnfileirados.insert(quadrosEnfileirados.end(), quadroDesenquadrado.begin(), quadroDesenquadrado.end());
+
+    cout << "Quadros Desenquadrados Contagem de Caracteres: ";
+    PrintVector(quadrosEnfileirados);
 
     return quadrosEnfileirados;
 }
@@ -255,6 +263,9 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadePar(vector<int
         quadro.push_back(BIT_1);
     }
 
+    cout << "Quadros com Bit de Paridade: ";
+    PrintVector(quadro);
+   
     return quadro;
 }
 
@@ -290,6 +301,9 @@ vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(vector<int> q
     if(counter % 2 != 0){
         cout << "\n" << "ERRO DETECTADO" << endl;
     }
+
+    cout << "Quadros sem Bit de Paridade: ";
+    PrintVector(quadroSemBitDeParidade);
 
     return quadroSemBitDeParidade;
 }
@@ -373,12 +387,12 @@ vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(vector<int> quadro){
     }
 
     crc = aux;
-
+  
     for (int i = 0; i < crc.size(); i++){
         quadro[quadro.size() - crc.size() + i] = crc[i];
     }
 
-    cout << "QUADRO COM CRC: ";
+    cout << "Quadros com CRC: ";
     PrintVector(quadro);
     cout << endl;
 
